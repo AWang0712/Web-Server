@@ -10,16 +10,25 @@ import static java.lang.System.out;
  */
 public class WebServer {
 
+    // default port and document root
+    private static int port = 8080;
+    private static String documentRoot = "D:\\SCU\\4_Winter2024\\CSEN317\\hw\\hw3\\webserver_files";
+
+
     public static void main(String[] args) throws IOException {
-        int port = 8080; // You can change this to any port number above 1024 and below 65535
+        // Parse command-line arguments
+        for (int i = 0; i < args.length; i++) {
+            if ("-document_root".equals(args[i])) {
+                documentRoot = args[++i];
+            } else if ("-port".equals(args[i])) {
+                port = Integer.parseInt(args[++i]);
+            }
+        }
 
         ServerSocket serverSocket = new ServerSocket(port);
         out.println("Server is listening on port " + port);
 
         while (true) {
-
-            // Define the root directory from which to serve files (later to be replaced by command-line argument)
-            String documentRoot = "D:\\SCU\\4_Winter2024\\CSEN317\\hw\\hw3\\webserver_files";
 
             try (Socket socket = serverSocket.accept();
                  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
