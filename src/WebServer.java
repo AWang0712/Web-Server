@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 public class WebServer {
     public static void main(String[] args) throws IOException {
@@ -23,6 +24,24 @@ public class WebServer {
                     if (inputLine.isEmpty()) { // HTTP request ends with a blank line
                         break;
                     }
+                }
+
+                // Parse the request
+                String[] requestLines = request.toString().split("\n");
+                String[] requestLine = requestLines[0].split(" ");
+                String httpMethod = requestLine[0];
+                String httpPath = requestLine[1];
+
+                System.out.println("HTTP Method: " + httpMethod);
+                System.out.println("HTTP Path: " + httpPath);
+
+                // Prepare an HTTP response
+                String httpResponse = "HTTP/1.1 200 OK\r\n\r\nHello World!";
+
+                // Send the HTTP response
+                try (OutputStream out = socket.getOutputStream()) {
+                    out.write(httpResponse.getBytes(StandardCharsets.UTF_8));
+                    out.flush();
                 }
 
                 System.out.println(request.toString()); // Print the complete HTTP request
